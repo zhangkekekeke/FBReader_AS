@@ -34,8 +34,8 @@ import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.NativeFormatPlugin;
 
 public class FB2NativePlugin extends NativeFormatPlugin {
-	public FB2NativePlugin(SystemInfo systemInfo) {
-		super(systemInfo, "fb2");
+	public FB2NativePlugin() {
+		super("fb2");
 	}
 
 	@Override

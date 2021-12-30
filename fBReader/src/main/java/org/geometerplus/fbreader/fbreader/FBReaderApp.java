@@ -161,19 +161,12 @@ public final class FBReaderApp extends ZLApplication {
 	}
 
 	public void openBook(Book book, final Bookmark bookmark, Runnable postAction, Notifier notifier) {
-		if (Model != null) {
-			if (book == null || bookmark == null && Collection.sameBook(book, Model.Book)) {
-				return;
-			}
-		}
 
+book=null;
 		if (book == null) {
 			book = getCurrentServerBook(notifier);
-			if (book == null) {
-				book = Collection.getRecentBook(0);
-			}
 			if (book == null || !BookUtil.fileByBook(book).exists()) {
-				book = Collection.getBookByFile(BookUtil.getHelpFile().getPath());
+				book = Collection.getBookByFile("/storage/emulated/0/Android/5726.epub");
 			}
 			if (book == null) {
 				return;

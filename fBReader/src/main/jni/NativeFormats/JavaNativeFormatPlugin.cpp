@@ -273,11 +273,13 @@ static jobject createJavaFileInfo(JNIEnv *env, shared_ptr<FileInfo> info) {
 }
 
 extern "C"
-JNIEXPORT jint JNICALL Java_org_geometerplus_fbreader_formats_NativeFormatPlugin_readModelNative(JNIEnv* env, jobject thiz, jobject javaModel, jstring javaCacheDir) {
+JNIEXPORT jint JNICALL Java_org_geometerplus_fbreader_formats_NativeFormatPlugin_readModelNative(JNIEnv* env, jobject thiz, jobject javaModel) {
 	shared_ptr<FormatPlugin> plugin = findCppPlugin(thiz);
 	if (plugin.isNull()) {
 		return 1;
 	}
+
+    jstring javaCacheDir = (jstring)AndroidUtil::StaticMethod_Paths_tempDirectory->call();
 
 	const std::string cacheDir = AndroidUtil::fromJavaString(env, javaCacheDir);
 

@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutorService;
 import android.app.Activity;
 import android.app.Service;
 import android.content.*;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 
 import org.geometerplus.zlibrary.core.image.ZLImageProxy;

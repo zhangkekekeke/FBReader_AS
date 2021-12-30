@@ -457,7 +457,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	const std::string fullfileName = pathPrefix(reader) + MiscUtil::decodeHtmlURL(fileName);
 	ZLFile imageFile(fullfileName);
 	if (!imageFile.exists()) {
-		return;
+	    ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye path for " + imageFile.path());
 	}
 
 	const bool flagParagraphIsOpen = bookReader(reader).paragraphIsOpen();

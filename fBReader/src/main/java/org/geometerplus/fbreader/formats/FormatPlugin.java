@@ -32,11 +32,9 @@ import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.fbreader.book.AbstractBook;
 
 public abstract class FormatPlugin {
-	protected final SystemInfo SystemInfo;
 	private final String myFileType;
 
-	protected FormatPlugin(SystemInfo systemInfo, String fileType) {
-		SystemInfo = systemInfo;
+	protected FormatPlugin(String fileType) {
 		myFileType = fileType;
 	}
 

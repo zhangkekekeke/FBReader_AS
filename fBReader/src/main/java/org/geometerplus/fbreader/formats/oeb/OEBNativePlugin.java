@@ -34,8 +34,8 @@ import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.NativeFormatPlugin;
 
 public class OEBNativePlugin extends NativeFormatPlugin {
-	public OEBNativePlugin(SystemInfo systemInfo) {
-		super(systemInfo, "ePub");
+	public OEBNativePlugin() {
+		super("ePub");
 	}
 
 	@Override

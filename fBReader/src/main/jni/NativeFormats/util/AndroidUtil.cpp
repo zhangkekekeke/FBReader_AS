@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
 #include <ZLFile.h>
 #include <FileEncryptionInfo.h>
 #include <ZLFileImage.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLLogger.h>
 
 #include "AndroidUtil.h"
 #include "JniEnvelope.h"
@@ -103,6 +103,8 @@ shared_ptr<Constructor> AndroidUtil::Constructor_FileEncryptionInfo;
 
 shared_ptr<Constructor> AndroidUtil::Constructor_ZLFileImage;
 
+shared_ptr<StaticObjectMethod> AndroidUtil::StaticMethod_Paths_tempDirectory;
+
 shared_ptr<StringMethod> AndroidUtil::Method_Book_getPath;
 shared_ptr<StringMethod> AndroidUtil::Method_Book_getTitle;
 shared_ptr<StringMethod> AndroidUtil::Method_Book_getLanguage;
@@ -136,7 +138,7 @@ JNIEnv *AndroidUtil::getEnv() {
 
 bool AndroidUtil::init(JavaVM* jvm) {
 	ourJavaVM = jvm;
-
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init start");
 	Method_java_lang_String_toLowerCase = new StringMethod(Class_java_lang_String, "toLowerCase", "()");
 	Method_java_lang_String_toUpperCase = new StringMethod(Class_java_lang_String, "toUpperCase", "()");
 
@@ -145,6 +147,8 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	StaticMethod_java_util_Locale_getDefault = new StaticObjectMethod(Class_java_util_Locale, "getDefault", Class_java_util_Locale, "()");
 	Method_java_util_Locale_getLanguage = new StringMethod(Class_java_util_Locale, "getLanguage", "()");
 
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0001");
+
 	Method_java_io_InputStream_close = new VoidMethod(Class_java_io_InputStream, "close", "()");
 	Method_java_io_InputStream_read = new IntMethod(Class_java_io_InputStream, "read", "([BII)");
 	Method_java_io_InputStream_skip = new LongMethod(Class_java_io_InputStream, "skip", "(J)");
@@ -152,23 +156,35 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_java_io_InputStream_markSupported = new BooleanMethod(Class_java_io_InputStream, "markSupported", "()");
 	Method_java_io_InputStream_reset = new VoidMethod(Class_java_io_InputStream, "reset", "()");
 
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0002");
+
+
 	StaticMethod_ZLibrary_Instance = new StaticObjectMethod(Class_ZLibrary, "Instance", Class_ZLibrary, "()");
 	Method_ZLibrary_getVersionName = new StringMethod(Class_ZLibrary, "getVersionName", "()");
 
-	StaticMethod_NativeFormatPlugin_create = new StaticObjectMethod(Class_NativeFormatPlugin, "create", Class_NativeFormatPlugin, "(Lorg/geometerplus/zlibrary/core/util/SystemInfo;Ljava/lang/String;)");
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0003");
+
+
+	StaticMethod_NativeFormatPlugin_create = new StaticObjectMethod(Class_NativeFormatPlugin, "create", Class_NativeFormatPlugin, "(Ljava/lang/String;)");
 	Method_NativeFormatPlugin_supportedFileType = new StringMethod(Class_NativeFormatPlugin, "supportedFileType", "()");
 
 	//StaticMethod_PluginCollection_Instance = new StaticObjectMethod(Class_PluginCollection, "Instance", Class_PluginCollection, "()");
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0004");
 
 	Method_Encoding_createConverter = new ObjectMethod(Class_Encoding, "createConverter", Class_EncodingConverter, "()");
 	Field_EncodingConverter_Name = new ObjectField(Class_EncodingConverter, "Name", Class_java_lang_String);
 	Method_EncodingConverter_convert = new IntMethod(Class_EncodingConverter, "convert", "([BII[C)");
 	Method_EncodingConverter_reset = new VoidMethod(Class_EncodingConverter, "reset", "()");
 
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0005");
+
+
 	StaticMethod_JavaEncodingCollection_Instance = new StaticObjectMethod(Class_JavaEncodingCollection, "Instance", Class_JavaEncodingCollection, "()");
 	Method_JavaEncodingCollection_getEncoding = new ObjectMethod(Class_JavaEncodingCollection, "getEncoding", Class_Encoding, "(Ljava/lang/String;)");
 	//Method_JavaEncodingCollection_getEncoding_int = new ObjectMethod(Class_JavaEncodingCollection, "getEncoding", Class_Encoding, "(I)");
 	Method_JavaEncodingCollection_providesConverterFor = new BooleanMethod(Class_JavaEncodingCollection, "providesConverterFor", "(Ljava/lang/String;)");
+
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0006");
 
 	StaticMethod_ZLFile_createFileByPath = new StaticObjectMethod(Class_ZLFile, "createFileByPath", Class_ZLFile, "(Ljava/lang/String;)");
 	Method_ZLFile_children = new ObjectMethod(Class_ZLFile, "children", Class_java_util_List, "()");
@@ -179,10 +195,18 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_ZLFile_size = new LongMethod(Class_ZLFile, "size", "()");
 	Method_ZLFile_lastModified = new LongMethod(Class_ZLFile, "lastModified", "()");
 
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0007");
+
 	Constructor_FileInfo = new Constructor(Class_FileInfo, "(Ljava/lang/String;Lorg/geometerplus/zlibrary/core/drm/FileEncryptionInfo;)V");
 	Constructor_FileEncryptionInfo = new Constructor(Class_FileEncryptionInfo, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0008");
+
 	Constructor_ZLFileImage = new Constructor(Class_ZLFileImage, "(Lorg/geometerplus/zlibrary/core/filesystem/ZLFile;Ljava/lang/String;[I[ILorg/geometerplus/zlibrary/core/drm/FileEncryptionInfo;)V");
+
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0009");
+
+	StaticMethod_Paths_tempDirectory = new StaticObjectMethod(Class_Paths, "tempDirectory", Class_java_lang_String, "()");
 
 	Method_Book_getPath = new StringMethod(Class_AbstractBook, "getPath", "()");
 	Method_Book_getTitle = new StringMethod(Class_AbstractBook, "getTitle", "()");
@@ -196,7 +220,11 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_Book_addTag = new VoidMethod(Class_AbstractBook, "addTag", "(Lorg/geometerplus/fbreader/book/Tag;)");
 	Method_Book_addUid = new VoidMethod(Class_AbstractBook, "addUid", "(Ljava/lang/String;Ljava/lang/String;)");
 
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0010");
+
 	StaticMethod_Tag_getTag = new StaticObjectMethod(Class_Tag, "getTag", Class_Tag, "(Lorg/geometerplus/fbreader/book/Tag;Ljava/lang/String;)");
+
+  ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init 0011");
 
 	Field_BookModel_Book = new ObjectField(Class_BookModel, "Book", Class_Book);
 	Method_BookModel_initInternalHyperlinks = new VoidMethod(Class_BookModel, "initInternalHyperlinks", "(Ljava/lang/String;Ljava/lang/String;I)");
@@ -208,6 +236,8 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_BookModel_addImage = new VoidMethod(Class_BookModel, "addImage", "(Ljava/lang/String;Lorg/geometerplus/zlibrary/core/image/ZLImage;)");
 	Method_BookModel_registerFontFamilyList = new VoidMethod(Class_BookModel, "registerFontFamilyList", "([Ljava/lang/String;)");
 	Method_BookModel_registerFontEntry = new VoidMethod(Class_BookModel, "registerFontEntry", "(Ljava/lang/String;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;)");
+
+    	    ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "keye init OK");
 
 	return true;
 }
